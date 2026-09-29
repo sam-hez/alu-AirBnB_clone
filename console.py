@@ -5,13 +5,22 @@ import shlex
 
 from models import storage
 from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class HBNBCommand(cmd.Cmd):
     """Provide a basic command prompt for the AirBnB clone."""
 
     prompt = "(hbnb) "
-    classes = {"BaseModel": BaseModel}
+    classes = {
+        "BaseModel": BaseModel, "User": User, "State": State,
+        "City": City, "Amenity": Amenity, "Place": Place, "Review": Review,
+    }
 
     def _valid_class(self, args):
         """Check the class name and print the required error if invalid."""
@@ -36,7 +45,7 @@ class HBNBCommand(cmd.Cmd):
         return obj
 
     def do_create(self, arg):
-        """Create and save an object: create BaseModel."""
+        """Create and save an object: create <class name>."""
         args = arg.split()
         if self._valid_class(args):
             obj = self.classes[args[0]]()
@@ -44,13 +53,13 @@ class HBNBCommand(cmd.Cmd):
             print(obj.id)
 
     def do_show(self, arg):
-        """Display an object: show BaseModel <id>."""
+        """Display an object: show <class name> <id>."""
         obj = self._find_instance(arg.split())
         if obj is not None:
             print(obj)
 
     def do_destroy(self, arg):
-        """Delete and save an object: destroy BaseModel <id>."""
+        """Delete and save an object: destroy <class name> <id>."""
         args = arg.split()
         obj = self._find_instance(args)
         if obj is not None:
@@ -58,7 +67,7 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
 
     def do_all(self, arg):
-        """List all objects, optionally filtered: all [BaseModel]."""
+        """List all objects, optionally filtered: all [class name]."""
         args = arg.split()
         if args and not self._valid_class(args):
             return
@@ -69,7 +78,7 @@ class HBNBCommand(cmd.Cmd):
         print(objects)
 
     def do_update(self, arg):
-        """Save one attribute: update BaseModel <id> <attribute> <value>."""
+        """Save an attribute: update <class name> <id> <attribute> <value>."""
         args = shlex.split(arg)
         obj = self._find_instance(args)
         if obj is None:

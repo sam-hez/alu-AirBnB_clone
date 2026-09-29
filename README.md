@@ -7,7 +7,8 @@ file and loaded again.
 
 The command interpreter uses Python's `cmd` module. At this stage, it supports
 `help`, `quit`, `EOF`, and commands to create, view, update, and delete
-BaseModel objects. Other model classes are available through Python.
+objects of every supported class: `BaseModel`, `User`, `State`, `City`,
+`Amenity`, `Place`, and `Review`.
 
 ## Starting the console
 
@@ -29,11 +30,11 @@ Type a command at the `(hbnb)` prompt and press Enter.
 | `help quit` | Shows help for the quit command. |
 | `quit` | Closes the console. |
 | `EOF` | Closes the console; Ctrl-D also works. |
-| `create BaseModel` | Saves a new object and prints its ID. |
-| `show BaseModel <id>` | Displays one object. |
-| `destroy BaseModel <id>` | Deletes an object and saves the change. |
-| `all [BaseModel]` | Lists all objects, optionally filtered by class. |
-| `update BaseModel <id> <attribute> <value>` | Changes one attribute and saves. |
+| `create <class>` | Saves a new object and prints its ID. |
+| `show <class> <id>` | Displays one object. |
+| `destroy <class> <id>` | Deletes an object and saves the change. |
+| `all [class]` | Lists all objects, optionally filtered by class. |
+| `update <class> <id> <attribute> <value>` | Changes one attribute and saves. |
 
 An empty line does nothing.
 
@@ -69,6 +70,21 @@ Put values containing spaces in double quotes. Updates keep an existing
 attribute's string, integer, or float type; new attributes are strings.
 Only the first attribute/value pair is used. IDs and timestamps cannot be
 set through `update`.
+
+The same commands work with the other classes. For example, run `create User`
+and replace `<user-id>` with the printed ID:
+
+```text
+create User
+update User <user-id> first_name "Betty"
+update User <user-id> email "airbnb@mail.com"
+show User <user-id>
+all User
+```
+
+For a `Place`, updates such as `number_rooms 2` and `latitude -1.95` are stored
+as an integer and a float. Fields such as `city_id`, `user_id`, and `place_id`
+hold the IDs of related objects.
 
 ### Non-interactive example
 

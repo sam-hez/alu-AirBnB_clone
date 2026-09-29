@@ -84,6 +84,47 @@ class TestFileStorage(unittest.TestCase):
         self.storage.reload()
         self.assertEqual(self.storage.all(), {"BaseModel." + obj.id: obj})
 
+    def test_related_models_round_trip(self):
+        """Model fields and related object IDs survive JSON storage."""
+        user = User()
+        user.first_name = "Betty"
+        user.last_name = "Bar"
+        user.email = "airbnb@mail.com"
+        user.password = "root"
+        state = State()
+        state.name = "Kigali"
+        city = City()
+        city.name = "Kigali"
+        city.state_id = state.id
+        amenity = Amenity()
+        amenity.name = "Wi-Fi"
+        place = Place()
+        place.name = "Guest house"
+        place.description = "A quiet room"
+        place.city_id = city.id
+        place.user_id = user.id
+        place.number_rooms = 2
+        place.number_bathrooms = 1
+        place.max_guest = 3
+        place.price_by_night = 50
+        place.latitude = -1.95
+        place.longitude = 30.06
+        place.amenity_ids = [amenity.id]
+        review = Review()
+        review.place_id = place.id
+        review.user_id = user.id
+        review.text = "A comfortable stay"
+        expected = {key: obj.to_dict()
+                    for key, obj in self.storage.all().items()}
+        self.storage.save()
+        self.storage.all().clear()
+        self.storage.reload()
+        restored = {key: obj.to_dict()
+                    for key, obj in self.storage.all().items()}
+        self.assertEqual(restored, expected)
+        self.assertEqual(self.storage.all()["Place." + place.id].amenity_ids,
+                         [amenity.id])
+
     def test_save_empty_store(self):
         """An empty store can be saved and loaded."""
         self.storage.save()

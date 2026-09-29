@@ -120,6 +120,68 @@ class TestConsole(unittest.TestCase):
                 obj.id, name))
         self.assertEqual(obj.to_dict(), original)
 
+    def test_commands_for_all_models(self):
+        """Each model supports creation, updates, listing, and deletion."""
+        cases = (("User", "first_name"), ("State", "name"),
+                 ("City", "name"), ("Amenity", "name"),
+                 ("Place", "description"), ("Review", "text"))
+        BaseModel()
+        for class_name, attribute in cases:
+            with self.subTest(model=class_name):
+                obj_id = self.run_command("create " + class_name).strip()
+                key = class_name + "." + obj_id
+                target = class_name + " " + obj_id
+                obj = storage.all()[key]
+                self.assertEqual(type(obj).__name__, class_name)
+                self.assertEqual(self.run_command("show " + target),
+                                 str(obj) + "\n")
+                self.run_command('update {} {} "Test value"'.format(
+                    target, attribute))
+                self.assertEqual(getattr(obj, attribute), "Test value")
+                self.assertEqual(
+                    ast.literal_eval(self.run_command("all " + class_name)),
+                    [str(obj)])
+                self.assertIn(str(obj),
+                              ast.literal_eval(self.run_command("all")))
+                storage.all().clear()
+                storage.reload()
+                restored = storage.all()[key]
+                self.assertIs(type(restored), type(obj))
+                self.assertEqual(restored.to_dict(), obj.to_dict())
+                self.assertEqual(self.run_command("destroy " + target), "")
+                self.assertNotIn(key, json.loads(self.path.read_text()))
+                self.assertEqual(self.run_command("show " + target),
+                                 "** no instance found **\n")
+                self.assertEqual(self.run_command("all " + class_name),
+                                 "[]\n")
+
+    def test_place_numeric_updates(self):
+        """Place class defaults determine integer and float conversions."""
+        obj_id = self.run_command("create Place").strip()
+        values = {"number_rooms": 3, "number_bathrooms": 2,
+                  "max_guest": 5, "price_by_night": 80,
+                  "latitude": -1.95, "longitude": 30.06}
+        for name, value in values.items():
+            self.run_command("update Place {} {} {}".format(
+                obj_id, name, value))
+        storage.all().clear()
+        storage.reload()
+        obj = storage.all()["Place." + obj_id]
+        for name, value in values.items():
+            with self.subTest(attribute=name):
+                self.assertEqual(getattr(obj, name), value)
+                self.assertIs(type(getattr(obj, name)), type(value))
+
+    def test_wrong_class_for_existing_id(self):
+        """An ID from another class cannot be shown, changed, or deleted."""
+        obj = User()
+        for command in ("show", "destroy", "update"):
+            with self.subTest(command=command):
+                self.assertEqual(self.run_command(
+                    "{} Place {}".format(command, obj.id)),
+                    "** no instance found **\n")
+        self.assertIs(storage.all()["User." + obj.id], obj)
+
     def test_prompt(self):
         """The console displays the required prompt."""
         self.assertEqual(self.console.prompt, "(hbnb) ")
