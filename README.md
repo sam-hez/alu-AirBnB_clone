@@ -6,8 +6,8 @@ reviews. Objects have unique IDs and timestamps and can be saved to a JSON
 file and loaded again.
 
 The command interpreter uses Python's `cmd` module. At this stage, it supports
-`help`, `quit`, and `EOF`. Commands to create, view, update, and delete objects
-will be added in later tasks.
+`help`, `quit`, `EOF`, and commands to create, view, update, and delete
+BaseModel objects. Other model classes are available through Python.
 
 ## Starting the console
 
@@ -29,6 +29,11 @@ Type a command at the `(hbnb)` prompt and press Enter.
 | `help quit` | Shows help for the quit command. |
 | `quit` | Closes the console. |
 | `EOF` | Closes the console; Ctrl-D also works. |
+| `create BaseModel` | Saves a new object and prints its ID. |
+| `show BaseModel <id>` | Displays one object. |
+| `destroy BaseModel <id>` | Deletes an object and saves the change. |
+| `all [BaseModel]` | Lists all objects, optionally filtered by class. |
+| `update BaseModel <id> <attribute> <value>` | Changes one attribute and saves. |
 
 An empty line does nothing.
 
@@ -40,13 +45,30 @@ $ ./console.py
 
 Documented commands (type help <topic>):
 ========================================
-EOF  help  quit
+EOF  all  create  destroy  help  quit  show  update
 
 (hbnb) help quit
 Quit the command interpreter.
 (hbnb) quit
 $
 ```
+
+### Managing an object
+
+Run `create BaseModel` and use its printed ID in place of `<id>` below:
+
+```text
+create BaseModel
+show BaseModel <id>
+update BaseModel <id> name "My First Model"
+all BaseModel
+destroy BaseModel <id>
+```
+
+Put values containing spaces in double quotes. Updates keep an existing
+attribute's string, integer, or float type; new attributes are strings.
+Only the first attribute/value pair is used. IDs and timestamps cannot be
+set through `update`.
 
 ### Non-interactive example
 
