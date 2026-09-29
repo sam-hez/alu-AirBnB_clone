@@ -2,6 +2,9 @@
 """Test file storage with temporary files and isolated objects."""
 import json
 import os
+from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -99,6 +102,54 @@ class TestFileStorage(unittest.TestCase):
         restored = self.storage.all()["User." + obj.id]
         self.assertEqual(restored.email, "student@example.com")
         self.assertEqual(restored.updated_at, obj.updated_at)
+
+    def test_storage_survives_restart(self):
+        """A fresh Python process automatically loads saved objects."""
+        root = Path(__file__).resolve().parents[3]
+        environment = os.environ.copy()
+        environment["PYTHONPATH"] = str(root)
+        environment["PYTHONDONTWRITEBYTECODE"] = "1"
+        create = """
+import json
+from models import storage
+from models.base_model import BaseModel
+
+assert storage.all() == {}
+obj = BaseModel()
+obj.name = "My_First_Model"
+obj.my_number = 89
+obj.save()
+print(json.dumps(obj.to_dict()))
+"""
+        reload_objects = """
+import json
+from datetime import datetime
+from models import storage
+from models.base_model import BaseModel
+
+assert len(storage.all()) == 1
+obj = next(iter(storage.all().values()))
+assert isinstance(obj, BaseModel)
+assert isinstance(obj.created_at, datetime)
+assert isinstance(obj.updated_at, datetime)
+print(json.dumps(obj.to_dict()))
+another = BaseModel()
+another.save()
+"""
+        results = []
+        for script in (create, reload_objects):
+            result = subprocess.run(
+                [sys.executable, "-c", script],
+                cwd=os.path.dirname(self.path), env=environment,
+                capture_output=True, text=True, timeout=5)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            results.append(json.loads(result.stdout))
+        self.assertEqual(results[0], results[1])
+        with open(self.path, encoding="utf-8") as file:
+            saved = json.load(file)
+        self.assertEqual(len(saved), 2)
+        key = "BaseModel." + results[0]["id"]
+        self.assertEqual(saved[key], results[0])
 
 
 if __name__ == "__main__":
