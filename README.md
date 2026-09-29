@@ -12,7 +12,15 @@ objects of every supported class: `BaseModel`, `User`, `State`, `City`,
 
 ## Starting the console
 
-Use Python 3.8 or later. From the repository directory, run:
+Use Python 3.8 or later. The console uses only Python's standard library.
+If you do not already have the repository, download it:
+
+```bash
+git clone https://github.com/sam-hez/alu-AirBnB_clone.git
+cd alu-AirBnB_clone
+```
+
+From the repository directory, run:
 
 ```bash
 ./console.py
@@ -36,7 +44,10 @@ Type a command at the `(hbnb)` prompt and press Enter.
 | `all [class]` | Lists all objects, optionally filtered by class. |
 | `update <class> <id> <attribute> <value>` | Changes one attribute and saves. |
 
-An empty line does nothing.
+Replace `<class>` with a supported class name and `<id>` with an object's ID.
+Square brackets mean an argument is optional: `all` lists every object, while
+`all User` lists only users. Use `help <command>`, such as `help update`, to
+see a command's usage. An empty line does nothing.
 
 ### Interactive example
 
@@ -138,3 +149,21 @@ Install the version required by the project and run the style check:
 python3 -m pip install 'pycodestyle==2.7.0'
 pycodestyle console.py models tests
 ```
+
+## Contributors
+
+See [AUTHORS](AUTHORS) for the people who have contributed to this repository.
+Each contributor is listed once using the format `Name <email>`.
+
+## Working as a team
+
+Use a separate branch for each task. For example, create a documentation
+branch before editing:
+
+```bash
+git switch -c docs/readme-authors
+```
+
+When the changes are ready, commit them, push the branch to GitHub, and open
+a pull request into `main`. Ask your teammate to review the pull request
+before merging it. Add new contributors to `AUTHORS` when they contribute.
