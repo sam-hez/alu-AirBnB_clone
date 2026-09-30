@@ -10,10 +10,16 @@ The footer stays at the bottom of the browser window.
   common, header, and footer CSS files in `styles/`.
 - `3-index.html` uses a white header and footer with gray borders, a logo,
   a browser icon, and the required font settings.
-
 - `4-index.html` adds a centered filters box and a Search button with a
   hover effect.
 - `5-index.html` adds States and Amenities filters with sample subtitles.
+
+- `6-index.html` adds CSS hover dropdowns for states, cities, and amenities.
+- `7-index.html` adds a Places section with three sample listings.
+- `8-index.html` adds prices, capacity icons, owners, and descriptions.
+
+Hover over States or Amenities to open a dropdown. Move the mouse away to
+close it. The place cards contain sample data.
 
 The filters are static examples; the Search button does not load results.
 
@@ -26,3 +32,5 @@ full width of the page. The body has no margin or padding.
 Task 3 displays the logo as a CSS background, 20 pixels from the left and
 vertically centered. Its logo and browser icon are stored in `images/`,
 using the [project assets from PierreBeaujuge's repository](https://github.com/PierreBeaujuge/AirBnB_clone/tree/master/web_static/images).
+
+The guest, bedroom, and bathroom icons use the same project asset source.
