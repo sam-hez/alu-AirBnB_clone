@@ -11,6 +11,12 @@ The footer stays at the bottom of the browser window.
 - `3-index.html` uses a white header and footer with gray borders, a logo,
   a browser icon, and the required font settings.
 
+- `4-index.html` adds a centered filters box and a Search button with a
+  hover effect.
+- `5-index.html` adds States and Amenities filters with sample subtitles.
+
+The filters are static examples; the Search button does not load results.
+
 Open any HTML file in a browser to view it. No installation or JavaScript
 is needed. Keep the `styles/` and `images/` folders beside the HTML files.
 
