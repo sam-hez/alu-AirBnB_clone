@@ -1,14 +1,22 @@
 # AirBnB clone - Web static
 
 These pages introduce HTML and CSS for the AirBnB clone front end.
-They contain a red header and a green footer with centered `Best School`
-text. The footer stays at the bottom of the browser window.
+Each page has a header and a footer with centered `Best School` text.
+The footer stays at the bottom of the browser window.
 
 - `0-index.html` uses inline styles on the body, header, and footer.
 - `1-index.html` uses a `style` element in the head for the same layout.
+- `2-index.html` keeps the red header and green footer, with separate
+  common, header, and footer CSS files in `styles/`.
+- `3-index.html` uses a white header and footer with gray borders, a logo,
+  a browser icon, and the required font settings.
 
-Open either HTML file in a browser to view it. No installation, JavaScript,
-images, or external files are needed.
+Open any HTML file in a browser to view it. No installation or JavaScript
+is needed. Keep the `styles/` and `images/` folders beside the HTML files.
 
 The header is 70 pixels high and the footer is 60 pixels high. Both use the
 full width of the page. The body has no margin or padding.
+
+Task 3 displays the logo as a CSS background, 20 pixels from the left and
+vertically centered. Its logo and browser icon are stored in `images/`,
+using the [project assets from PierreBeaujuge's repository](https://github.com/PierreBeaujuge/AirBnB_clone/tree/master/web_static/images).
